@@ -1,8 +1,11 @@
 using System.Reflection;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LuaToolsGui.Services;
+using LuaToolsGui.Services.Downloads;
 
 namespace LuaToolsGui.ViewModels;
 
@@ -10,6 +13,9 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly AuthService _auth;
     private readonly SteamService _steam;
+    private readonly CefInjectorService _cef;
+    private readonly DownloadQueue _queue;
+    private readonly DispatcherTimer _statusTimer;
 
     /// <summary>The first-run welcome overlay VM (hosted at the window root, shown via its IsOpen).</summary>
     public OnboardingViewModel Onboarding { get; }
@@ -40,12 +46,76 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _isSigningIn;
     [ObservableProperty] private string? _signInError;
 
-    public MainViewModel(AuthService auth, SteamService steam, OnboardingViewModel onboarding)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ActiveDownloadCountString))]
+    private int _activeDownloadCount;
+
+    [ObservableProperty]
+    private bool _hasActiveDownloads;
+
+    public string ActiveDownloadCountString => ActiveDownloadCount.ToString();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SteamStatusBrush))]
+    [NotifyPropertyChangedFor(nameof(SteamStatusLabel))]
+    private bool _isSteamRunning;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CefStatusBrush))]
+    [NotifyPropertyChangedFor(nameof(CefStatusLabel))]
+    private bool _isCefConnected;
+
+    private static readonly Brush GreenBrush = CreateFrozenBrush(Color.FromRgb(0x34, 0xd3, 0x99));
+    private static readonly Brush BlueBrush = CreateFrozenBrush(Color.FromRgb(0x38, 0xbd, 0xf8));
+    private static readonly Brush GrayBrush = CreateFrozenBrush(Color.FromRgb(0x9c, 0xa3, 0xaf));
+
+    private static Brush CreateFrozenBrush(Color c)
+    {
+        var b = new SolidColorBrush(c);
+        b.Freeze();
+        return b;
+    }
+
+    public Brush SteamStatusBrush => IsSteamRunning ? GreenBrush : GrayBrush;
+    public string SteamStatusLabel => IsSteamRunning ? "Steam Running" : "Steam Stopped";
+
+    public Brush CefStatusBrush => IsCefConnected ? BlueBrush : GrayBrush;
+    public string CefStatusLabel => IsCefConnected ? "Plugin Connected" : "Plugin Standby";
+
+    public MainViewModel(AuthService auth, SteamService steam, CefInjectorService cef, DownloadQueue queue, OnboardingViewModel onboarding)
     {
         _auth = auth;
         _steam = steam;
+        _cef = cef;
+        _queue = queue;
         Onboarding = onboarding;
         _auth.AuthStateChanged += () => IsGuest = _auth.IsGuest;
+
+        _queue.StateChanged += () => Application.Current?.Dispatcher.InvokeAsync(UpdateDownloadState);
+        _queue.Items.CollectionChanged += (_, _) => Application.Current?.Dispatcher.InvokeAsync(UpdateDownloadState);
+        UpdateDownloadState();
+
+        _cef.CefStatusChanged += () => Application.Current?.Dispatcher.InvokeAsync(() => IsCefConnected = _cef.IsCefConnected);
+
+        _statusTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(2)
+        };
+        _statusTimer.Tick += (_, _) => CheckStatus();
+        _statusTimer.Start();
+        CheckStatus();
+    }
+
+    private void UpdateDownloadState()
+    {
+        ActiveDownloadCount = _queue.ActiveCount;
+        HasActiveDownloads = ActiveDownloadCount > 0;
+    }
+
+    private void CheckStatus()
+    {
+        IsSteamRunning = SteamService.IsSteamRunning();
+        IsCefConnected = _cef.IsCefConnected;
     }
 
     public async Task InitializeAsync()

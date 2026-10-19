@@ -33,15 +33,29 @@
  </picture>
 </a>
 
+## Features
+
+- **Manifest & Lua Management**: Browse and install manifest sources, edit `stplug-in` lua files, pin manifests, and enable/disable depots per game.
+- **Steam Store Companion**: Seamless CEF injection for Steam store pages, with live connection indicators (Steam and Plugin status) in the title bar.
+- **Centralized Download Scheduler**: Multi-threaded downloader queue with live progress metrics, pause/resume, history search/filter, and navigation badge counters.
+- **Game Fixes & Unlocker Modes**: Easily manage modes, applied fixes with visual card badges, Steamless DRM stripping, and CloudRedirect integration.
+- **Multilingual & Auto-Updating**: Translated into 29 languages with Velopack auto-updates as well as standalone portable single-file distribution.
+
 ## Requirements
 
-- Windows 10/11
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (the released installer bundles a
-  check for the .NET 8 **Desktop Runtime** and installs it if missing; [building from source](https://github.com/madoiscool/LuaTools/blob/main/CONTRIBUTING.md#building-from-source--developing) needs
-  the full SDK
+- Windows 10/11 (x64)
+- [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (or [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) if building from source)
 
-## Installation
-You can find release builds on the [luatools website](https://lua.tools/app) or in the [releases](https://github.com/madoiscool/LuaTools/releases/latest) tab. 
+## Installation & Portable Build
+
+You can find release builds on the [luatools website](https://lua.tools/app) or in the [releases](https://github.com/madoiscool/LuaTools/releases/latest) tab.
+
+### Building Portable Single-File Executable
+You can build a standalone, self-contained portable executable with the .NET 8 SDK without requiring an installed runtime:
+
+```powershell
+dotnet publish ./src/LuaToolsGui/LuaToolsGui.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish-portable
+```
 
 ## Credits / Adjacent software
 
@@ -54,7 +68,7 @@ You can find release builds on the [luatools website](https://lua.tools/app) or 
 - [SteamAutoCrack](https://github.com/SteamAutoCracks/Steam-auto-crack): fetched and launched from the
   Downloads page
 - [Steamless](https://github.com/atom0s/Steamless): removes SteamStub from game executables
-- [CloudRedirect](https://github.com/Selectively11/CloudRedirect): Steam Cloud revival project, can be turned on via the mode page
+- [CloudRedirect](https://github.com/qibo30/CloudRedirect): Steam Cloud revival project, can be turned on via the mode page
 
 ## Licence
 

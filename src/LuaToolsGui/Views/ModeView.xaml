@@ -53,8 +53,8 @@
                             <Border
                                 Margin="0,0,0,12"
                                 Padding="18"
-                                Background="#0DFFFFFF"
-                                BorderBrush="#1FFFFFFF"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                 BorderThickness="1"
                                 CornerRadius="10">
                                 <Grid>
@@ -206,15 +206,15 @@
         <StackPanel Grid.Row="1" MaxWidth="760" Margin="8,0,16,16">
 
                 <!-- Divider between the scrolling mode cards and the docked add-on. -->
-                <Border Height="1" Margin="0,0,0,14" Background="#1FFFFFFF" />
+                <Border Height="1" Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}" />
 
                 <!-- CloudRedirect add-on: a feature of the Nightly BST build. Locked (dimmed, buttons
                       disabled) unless BetterSteamTools Nightly is the active mode. -->
                 <Border
                     Margin="0,0,0,0"
                     Padding="18"
-                    Background="#0DFFFFFF"
-                    BorderBrush="#1FFFFFFF"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="10">
                     <Border.Style>

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LuaToolsGui.Services;
@@ -19,6 +21,17 @@ public partial class DownloadsViewModel : ObservableObject
     private readonly SteamAutoCrackService _sac;
     private readonly ToastService _toast;
 
+    public ICollectionView FilteredHistory { get; }
+
+    [ObservableProperty]
+    private string _historySearchText = "";
+
+    partial void OnHistorySearchTextChanged(string value)
+    {
+        FilteredHistory.Refresh();
+        OnPropertyChanged(nameof(HasHistory));
+    }
+
     public DownloadsViewModel(DownloadQueue queue, ManifestJobFactory jobs, SteamAutoCrackService sac,
         ToastService toast)
     {
@@ -27,9 +40,22 @@ public partial class DownloadsViewModel : ObservableObject
         _sac = sac;
         _toast = toast;
 
+        FilteredHistory = CollectionViewSource.GetDefaultView(_queue.History);
+        FilteredHistory.Filter = FilterHistoryItem;
+
         _queue.Items.CollectionChanged += (_, _) => RaiseCounts();
         _queue.History.CollectionChanged += (_, _) => RaiseCounts();
         _queue.StateChanged += RaiseCounts;
+    }
+
+    private bool FilterHistoryItem(object obj)
+    {
+        if (string.IsNullOrWhiteSpace(HistorySearchText)) return true;
+        if (obj is not DownloadHistoryEntry entry) return false;
+        string query = HistorySearchText.Trim();
+        return (entry.Title?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (entry.SubTitle?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (entry.AppId.ToString().Contains(query, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>Bound directly by the view: <c>Queue.Items</c> and <c>Queue.History</c>.</summary>
@@ -44,6 +70,7 @@ public partial class DownloadsViewModel : ObservableObject
 
     private void RaiseCounts()
     {
+        FilteredHistory.Refresh();
         OnPropertyChanged(nameof(HasItems));
         OnPropertyChanged(nameof(HasHistory));
         OnPropertyChanged(nameof(IsEmpty));

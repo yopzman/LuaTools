@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
@@ -36,6 +36,20 @@ public class CefInjectorService : IHostedService
     private const string BaseUrl = "http://127.0.0.1:6767";
 
     private static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
+
+    private bool _isCefConnected;
+    public bool IsCefConnected
+    {
+        get => _isCefConnected;
+        private set
+        {
+            if (_isCefConnected == value) return;
+            _isCefConnected = value;
+            CefStatusChanged?.Invoke();
+        }
+    }
+
+    public event Action? CefStatusChanged;
 
     public CefInjectorService(SteamService steam, ILogger<CefInjectorService> logger)
     {
@@ -90,6 +104,7 @@ public class CefInjectorService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _cts?.Cancel();
+        IsCefConnected = false;
         foreach (var ws in _sockets.Values)
             try { ws.Dispose(); } catch { /* best effort on shutdown */ }
         _sockets.Clear();
@@ -122,6 +137,7 @@ public class CefInjectorService : IHostedService
                     var tabsJson = await _http.GetStringAsync(CefDebugUrl, ct);
                     if (!string.IsNullOrWhiteSpace(tabsJson))
                     {
+                        IsCefConnected = true;
                         var tabs = JsonSerializer.Deserialize<List<CefTabInfo>>(tabsJson, JsonOpts) ?? new();
 
                         // Inject luatools.js into every store-page tab whose JS context isn't already alive.
@@ -171,9 +187,14 @@ public class CefInjectorService : IHostedService
                 tick++;
                 await Task.Delay(TickMs, ct);
             }
-            catch (OperationCanceledException) { break; }
+            catch (OperationCanceledException)
+            {
+                IsCefConnected = false;
+                break;
+            }
             catch (Exception ex)
             {
+                IsCefConnected = false;
                 _log.LogDebug("CEF cycle: {Message}", ex.Message);
                 try { await Task.Delay(1000, ct); } catch { break; }
             }

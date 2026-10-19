@@ -21,13 +21,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="B" Padding="16,14" Background="#0DFFFFFF" BorderBrush="#14FFFFFF" BorderThickness="1" CornerRadius="10">
+                        <Border x:Name="B" Padding="16,14" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="10">
                             <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="B" Property="Background" Value="#18FFFFFF" />
-                                <Setter TargetName="B" Property="BorderBrush" Value="#33FFFFFF" />
+                                <Setter TargetName="B" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+                                <Setter TargetName="B" Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -46,7 +46,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="B" Property="Background" Value="#14FFFFFF" />
+                                <Setter TargetName="B" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -112,8 +112,8 @@
             <Border
                 Margin="0,12,0,0"
                 Padding="10,8"
-                Background="#0DFFFFFF"
-                BorderBrush="#14FFFFFF"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="10">
                 <StackPanel>
@@ -145,13 +145,13 @@
                                 Margin="10,0,0,0"
                                 VerticalAlignment="Center"
                                 FontSize="12.5"
-                                Foreground="#d1d5db"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{Binding SteamStatus}"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>
                     </Button>
 
-                    <Separator Margin="0,10" Background="#14FFFFFF" />
+                    <Separator Margin="0,10" Background="{DynamicResource DividerStrokeColorDefaultBrush}" />
 
                     <!-- Account → Settings -->
                     <Button Command="{Binding OpenSettingsCommand}" Style="{StaticResource StatusRowButton}">
@@ -171,12 +171,12 @@
                                 Margin="10,0,0,0"
                                 VerticalAlignment="Center"
                                 FontSize="12.5"
-                                Foreground="#d1d5db"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{Binding AccountStatus}" />
                         </Grid>
                     </Button>
 
-                    <Separator Margin="0,10" Background="#14FFFFFF" />
+                    <Separator Margin="0,10" Background="{DynamicResource DividerStrokeColorDefaultBrush}" />
 
                     <!-- Active mode → Mode -->
                     <Button Command="{Binding OpenModeCommand}" Style="{StaticResource StatusRowButton}">
@@ -233,14 +233,14 @@
                                         <Border
                                             x:Name="Card"
                                             Width="170"
-                                            Background="#0DFFFFFF"
-                                            BorderBrush="#14FFFFFF"
+                                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                                             BorderThickness="1"
                                             CornerRadius="10">
                                             <StackPanel>
                                                 <Border
                                                     Height="80"
-                                                    Background="#11FFFFFF"
+                                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
                                                     ClipToBounds="True"
                                                     CornerRadius="10,10,0,0">
                                                     <Image Source="{Binding Cover}" Stretch="UniformToFill" />
@@ -255,8 +255,8 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Card" Property="Background" Value="#18FFFFFF" />
-                                                <Setter TargetName="Card" Property="BorderBrush" Value="#33FFFFFF" />
+                                                <Setter TargetName="Card" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+                                                <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>

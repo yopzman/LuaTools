@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -38,6 +38,7 @@ public partial class LuaTileViewModel : ObservableObject
     [ObservableProperty] private string _name;
     [ObservableProperty] private ImageSource? _cover;
     [ObservableProperty] private bool _isSelected;
+    [ObservableProperty] private bool _hasAppliedFix;
 
     /// <summary>True once this app's full details are cached (so filters/sort can use it).</summary>
     [ObservableProperty] private bool _detailsLoaded;
@@ -184,6 +185,7 @@ public partial class ManageViewModel : PagedListViewModel<LuaTileViewModel>
     private readonly ToastService _toast;
     private readonly SettingsService _settings;
     private readonly SteamlessService _steamless;
+    private readonly AppliedFixIndexService _fixIndex;
 
     private List<LuaTileViewModel> _all = [];
     private CancellationTokenSource? _prefetchCts;
@@ -275,7 +277,7 @@ public partial class ManageViewModel : PagedListViewModel<LuaTileViewModel>
 
     public ManageViewModel(SteamService steam, SteamAppListCache appList, SteamAppInfoCache appInfo,
         CoverCache covers, ToastService toast, SettingsService settings,
-        SteamlessService steamless)
+        SteamlessService steamless, AppliedFixIndexService fixIndex)
     {
         _steam = steam;
         _appList = appList;
@@ -284,6 +286,7 @@ public partial class ManageViewModel : PagedListViewModel<LuaTileViewModel>
         _toast = toast;
         _settings = settings;
         _steamless = steamless;
+        _fixIndex = fixIndex;
         InitPageSize(settings.ManagePageSize);
     }
 
@@ -576,7 +579,19 @@ public partial class ManageViewModel : PagedListViewModel<LuaTileViewModel>
                     .OrderByDescending(t => t.AddedAt)
                     .ToList());
 
-            foreach (var t in tiles) t.SelectionChanged = RecountSelection;
+            HashSet<long> fixAppIds = [];
+            try
+            {
+                var appliedFixes = await _fixIndex.ListAsync();
+                fixAppIds = appliedFixes.Select(f => f.AppId).ToHashSet();
+            }
+            catch { /* non-critical index hint */ }
+
+            foreach (var t in tiles)
+            {
+                t.SelectionChanged = RecountSelection;
+                t.HasAppliedFix = fixAppIds.Contains(t.AppId);
+            }
             _all = tiles;
             SelectedCount = 0; // fresh scan clears any prior selection
             PopulateFilterOptions();
