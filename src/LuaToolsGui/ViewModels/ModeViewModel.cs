@@ -75,32 +75,14 @@ public partial class ModeViewModel : ObservableObject
         _cloudRedirect = cloudRedirect;
     }
 
-    /// <summary>CloudRedirect "Manage" (add-on panel): download (cache) the CloudRedirect GUI and launch it.</summary>
-    [RelayCommand]
-    private async Task ManageCloudRedirect()
-    {
-        if (IsBusy) return;
-        IsBusy = true;
-        IsProgressIndeterminate = true;
-        Progress = 0;
-        try
-        {
-            var prog = new Progress<double?>(p =>
-            {
-                IsProgressIndeterminate = p is null;
-                if (p is not null) Progress = p.Value * 100;
-            });
+    /// <summary>Navigate to the integrated Cloud Sync page.</summary>
+    public Action? NavigateToCloudSync { get; set; }
 
-            bool ok = await _cloudRedirect.LaunchAsync(prog);
-            if (!ok)
-                _toast.Show(Resources.Strings.Mode_CloudRedirect_Manage,
-                    Resources.Strings.Mode_CloudRedirect_LaunchFailed, error: true);
-        }
-        finally
-        {
-            IsBusy = false;
-            IsProgressIndeterminate = false;
-        }
+    /// <summary>CloudRedirect "Manage" (add-on panel): navigate to the integrated Cloud Sync page.</summary>
+    [RelayCommand]
+    private void ManageCloudRedirect()
+    {
+        NavigateToCloudSync?.Invoke();
     }
 
     // ── CloudRedirect add-on (bottom panel; usable when either OST or BST is active) ───

@@ -76,6 +76,10 @@ public partial class App : Application
                 services.AddSingleton<FixesViewModel>();
                 services.AddSingleton<DownloadsViewModel>();
                 services.AddSingleton<PluginViewModel>();
+                services.AddSingleton<Services.CloudSync.CloudSyncOAuthService>();
+                services.AddSingleton<Services.CloudSync.CloudSyncCliService>();
+                services.AddSingleton<Services.CloudSync.CloudSyncService>();
+                services.AddSingleton<CloudSyncViewModel>();
                 services.AddSingleton<OnboardingViewModel>();
                 services.AddSingleton<MainViewModel>();
                 // Pages resolved by NavigationView via the DI service provider.
@@ -85,6 +89,7 @@ public partial class App : Application
                 services.AddSingleton<ManageView>();
                 services.AddSingleton<BuildsView>();
                 services.AddSingleton<ModeView>();
+                services.AddSingleton<CloudSyncView>();
                 services.AddSingleton<FixesView>();
                 services.AddSingleton<PluginView>();
                 services.AddSingleton<SettingsView>();
@@ -404,6 +409,9 @@ public partial class App : Application
         home.NavigateToManage = () => Dispatcher.Invoke(window.NavigateToManage);
         home.NavigateToSettings = () => Dispatcher.Invoke(window.NavigateToSettings);
         home.NavigateToMode = () => Dispatcher.Invoke(window.NavigateToMode);
+
+        var mode = _host.Services.GetRequiredService<ModeViewModel>();
+        mode.NavigateToCloudSync = () => Dispatcher.Invoke(window.NavigateToCloudSync);
 
         // Onboarding finished applying its actions → refresh the Home dashboard tiles (mode + plugin status).
         main.Onboarding.RefreshHome = () => Dispatcher.Invoke(() => home.LoadAsync());

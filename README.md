@@ -37,8 +37,9 @@
 
 - **Manifest & Lua Management**: Browse and install manifest sources, edit `stplug-in` lua files, pin manifests, and enable/disable depots per game.
 - **Steam Store Companion**: Seamless CEF injection for Steam store pages, with live connection indicators (Steam and Plugin status) in the title bar.
+- **Native Cloud Sync (CloudRedirect Integration)**: Native management for Steam Cloud save redirection without needing external apps. Supports Local Folders, Steam Workshop sync, Google Drive, OneDrive, Cloudflare R2, and S3-Compatible storage, alongside save restoration, AppID 760 contamination cleanup, provider migration, and manifest pinning.
 - **Centralized Download Scheduler**: Multi-threaded downloader queue with live progress metrics, pause/resume, history search/filter, and navigation badge counters.
-- **Game Fixes & Unlocker Modes**: Easily manage modes, applied fixes with visual card badges, Steamless DRM stripping, and CloudRedirect integration.
+- **Game Fixes & Unlocker Modes**: Easily manage modes, applied fixes with visual card badges, and Steamless DRM stripping.
 - **Multilingual & Auto-Updating**: Translated into 29 languages with Velopack auto-updates as well as standalone portable single-file distribution.
 
 ## Requirements
@@ -68,7 +69,7 @@ dotnet publish ./src/LuaToolsGui/LuaToolsGui.csproj -c Release -r win-x64 --self
 - [SteamAutoCrack](https://github.com/SteamAutoCracks/Steam-auto-crack): fetched and launched from the
   Downloads page
 - [Steamless](https://github.com/atom0s/Steamless): removes SteamStub from game executables
-- [CloudRedirect](https://github.com/qibo30/CloudRedirect): Steam Cloud revival project, can be turned on via the mode page
+- [CloudRedirect](https://github.com/qibo30/CloudRedirect): Steam Cloud redirection project with Steam Workshop provider support, now natively integrated into LuaTools under Cloud Sync
 
 ## Licence
 

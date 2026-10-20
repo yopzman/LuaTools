@@ -64,6 +64,7 @@
   <data name="Nav_Add" xml:space="preserve"><value>Legg til</value></data>
   <data name="Nav_Manage" xml:space="preserve"><value>Administrer</value></data>
   <data name="Nav_Mode" xml:space="preserve"><value>Modus</value></data>
+  <data name="Nav_CloudSync" xml:space="preserve"><value>Cloud Sync</value></data>
   <data name="Nav_Fixes" xml:space="preserve"><value>Fikser</value></data>
   <data name="Nav_RestartSteam" xml:space="preserve"><value>Start Steam på nytt</value></data>
   <data name="Nav_Settings" xml:space="preserve"><value>Innstillinger</value></data>

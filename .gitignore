@@ -18,6 +18,7 @@ Releases/
 # Local agent / editor config (contains machine-specific absolute paths)
 .claude/
 CLAUDE.md
+.zcode/
 AGENTS.md
 .cursor/
 .cursorrules

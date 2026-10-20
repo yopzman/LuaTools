@@ -25,6 +25,7 @@ public static class Strings
     public static string Nav_Manage => Get(nameof(Nav_Manage));
     public static string Nav_Builds => Get(nameof(Nav_Builds));
     public static string Nav_Mode => Get(nameof(Nav_Mode));
+    public static string Nav_CloudSync => Get(nameof(Nav_CloudSync));
     public static string Nav_Fixes => Get(nameof(Nav_Fixes));
     public static string Nav_RestartSteam => Get(nameof(Nav_RestartSteam));
     public static string Nav_Settings => Get(nameof(Nav_Settings));

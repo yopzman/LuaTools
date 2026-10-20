@@ -122,6 +122,11 @@
                             <ui:SymbolIcon Symbol="Options24" />
                         </ui:NavigationViewItem.Icon>
                     </ui:NavigationViewItem>
+                    <ui:NavigationViewItem Content="{x:Static res:Strings.Nav_CloudSync}" TargetPageType="{x:Type views:CloudSyncView}">
+                        <ui:NavigationViewItem.Icon>
+                            <ui:SymbolIcon Symbol="CloudSync24" />
+                        </ui:NavigationViewItem.Icon>
+                    </ui:NavigationViewItem>
                     <ui:NavigationViewItem Content="{x:Static res:Strings.Nav_Fixes}" TargetPageType="{x:Type views:FixesView}">
                         <ui:NavigationViewItem.Icon>
                             <ui:SymbolIcon Symbol="ShieldTask24" />
